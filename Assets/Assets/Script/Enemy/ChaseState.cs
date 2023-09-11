@@ -6,12 +6,12 @@ public class ChaseState : IBehaviourState
 {
     public void OnEnterState(EnemyBehaviour enemyBehaviour)
     {
-        // Debug.Log("Enter Chase");
+
     }
 
     public void OnExitState(EnemyBehaviour enemyBehaviour)
     {
-        // Debug.Log("Exit Chase");
+
     }
 
     public void OnUpdateState(EnemyBehaviour enemyBehaviour)
@@ -22,9 +22,11 @@ public class ChaseState : IBehaviourState
         }
 
         enemyBehaviour.NavMeshAgent.destination = enemyBehaviour.Player.transform.position;
+        Debug.LogWarning(enemyBehaviour.gameObject.name + " Chase Player");
 
         if (Vector3.Distance(enemyBehaviour.transform.position, enemyBehaviour.Player.transform.position) > enemyBehaviour.MaxPlayerDistance)
         {
+            Debug.LogWarning("Lost Player");
             enemyBehaviour.SwitchState(enemyBehaviour.NeutralState);
         }
     }

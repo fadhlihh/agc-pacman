@@ -30,13 +30,11 @@ public class GameManager : MonoBehaviour
 
     public void Win()
     {
-        Debug.Log("Win");
         _winPanel.SetActive(true);
     }
 
     public void Lose()
     {
-        Debug.Log("Lose");
         _losePanel.SetActive(true);
     }
 

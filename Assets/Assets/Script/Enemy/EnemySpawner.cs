@@ -28,11 +28,12 @@ public class EnemySpawner : MonoBehaviour
         {
             StopCoroutine(_enemyRelease);
         }
+        _isSpawning = false;
         _enemyQueue.Clear();
         foreach (EnemyBehaviour enemy in _enemyList)
         {
             _enemyQueue.Enqueue(enemy);
-            enemy.Return();
+            enemy.Reset();
         }
         StartSpawnEnemy();
     }
@@ -40,7 +41,10 @@ public class EnemySpawner : MonoBehaviour
     public void ReturnEnemy(EnemyBehaviour enemy)
     {
         _enemyQueue.Enqueue(enemy);
-        StartSpawnEnemy();
+        if (_enemyQueue.Count <= 1)
+        {
+            StartSpawnEnemy();
+        }
     }
 
     private void Awake()
@@ -55,7 +59,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void StartSpawnEnemy()
     {
-        Debug.Log(_enemyQueue.Count);
         if (_enemyQueue.Count >= _enemyList.Count)
         {
             ReleaseEnemy();

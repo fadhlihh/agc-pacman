@@ -10,6 +10,7 @@ public class NeutralState : IBehaviourState
     private Vector3 _destination;
     public void OnEnterState(EnemyBehaviour enemyBehaviour)
     {
+        _isMoving = false;
         _destination = enemyBehaviour.transform.position;
     }
 

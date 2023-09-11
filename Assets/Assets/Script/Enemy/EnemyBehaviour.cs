@@ -67,7 +67,7 @@ public class EnemyBehaviour : MonoBehaviour
         Waypoints.Add(waypoint);
     }
 
-    public void Return()
+    public void Reset()
     {
         _mesh.SetActive(true);
         _eyes.SetActive(false);
@@ -75,6 +75,11 @@ public class EnemyBehaviour : MonoBehaviour
         transform.rotation = Quaternion.identity;
         transform.position = ReturnPoint.position;
         SwitchState(WaitingState);
+    }
+
+    public void Return()
+    {
+        Reset();
         _onReturn(this);
     }
 

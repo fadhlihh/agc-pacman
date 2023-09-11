@@ -1,6 +1,6 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,10 +10,18 @@ public class EnemyBehaviour : MonoBehaviour
     public Player Player;
     [SerializeField]
     public float MaxPlayerDistance;
+
     public NavMeshAgent NavMeshAgent;
     public bool IsRetreating;
     public bool IsSpawned;
     public List<Transform> Waypoints = new List<Transform>();
+    public Transform SpawnPoint;
+    public Transform ReturnPoint;
+
+    [SerializeField]
+    private GameObject _eyes;
+    [SerializeField]
+    private GameObject _mesh;
 
     private WaitingState _waitingState = new WaitingState();
     private NeutralState _neutralState = new NeutralState();
@@ -22,6 +30,7 @@ public class EnemyBehaviour : MonoBehaviour
     private ReturnBaseState _returnBaseState = new ReturnBaseState();
     private IBehaviourState _currentState;
     private Animator _animator;
+    private Action<EnemyBehaviour> _onReturn;
 
     public WaitingState WaitingState { get { return _waitingState; } }
     public NeutralState NeutralState { get { return _neutralState; } }
@@ -38,7 +47,8 @@ public class EnemyBehaviour : MonoBehaviour
 
     public void ReturnToBase()
     {
-        Debug.Log("Enemy Dead");
+        _mesh.SetActive(false);
+        _eyes.SetActive(true);
         SwitchState(_returnBaseState);
     }
 
@@ -52,14 +62,27 @@ public class EnemyBehaviour : MonoBehaviour
         IsRetreating = false;
     }
 
-    public void SetNavMeshStatus(bool isActive)
-    {
-        NavMeshAgent.enabled = isActive;
-    }
-
     public void AddWaypoint(Transform waypoint)
     {
         Waypoints.Add(waypoint);
+    }
+
+    public void Return()
+    {
+        _mesh.SetActive(true);
+        _eyes.SetActive(false);
+        NavMeshAgent.enabled = false;
+        transform.rotation = Quaternion.identity;
+        transform.position = ReturnPoint.position;
+        SwitchState(WaitingState);
+        _onReturn(this);
+    }
+
+    public void InitEnemy(Transform spawnPoint, Transform returnPoint, Action<EnemyBehaviour> onReturn)
+    {
+        SpawnPoint = spawnPoint;
+        ReturnPoint = returnPoint;
+        _onReturn += onReturn;
     }
 
     private void Awake()

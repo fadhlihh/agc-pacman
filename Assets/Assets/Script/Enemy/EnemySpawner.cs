@@ -13,7 +13,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     private EnemyBehaviour _enemyPrefabs;
     [SerializeField]
-    public List<Transform> Waypoints = new List<Transform>();
+    private List<Transform> _waypoints = new List<Transform>();
     [SerializeField]
     private List<Transform> _returnPoint = new List<Transform>();
 
@@ -24,16 +24,15 @@ public class EnemySpawner : MonoBehaviour
 
     public void ReturnAllEnemy()
     {
-        StopCoroutine(_enemyRelease);
+        if (_enemyRelease != null)
+        {
+            StopCoroutine(_enemyRelease);
+        }
         _enemyQueue.Clear();
         foreach (EnemyBehaviour enemy in _enemyList)
         {
             _enemyQueue.Enqueue(enemy);
-            enemy.SetNavMeshStatus(false);
-            enemy.SwitchState(enemy.WaitingState);
-            int enemyIndex = _enemyList.IndexOf(enemy);
-            enemy.transform.rotation = Quaternion.identity;
-            enemy.transform.position = _returnPoint[enemyIndex].position;
+            enemy.Return();
         }
         StartSpawnEnemy();
     }
@@ -41,11 +40,6 @@ public class EnemySpawner : MonoBehaviour
     public void ReturnEnemy(EnemyBehaviour enemy)
     {
         _enemyQueue.Enqueue(enemy);
-        enemy.SetNavMeshStatus(false);
-        enemy.SwitchState(enemy.WaitingState);
-        int enemyIndex = _enemyList.IndexOf(enemy);
-        enemy.transform.rotation = Quaternion.identity;
-        enemy.transform.position = _returnPoint[enemyIndex].position;
         StartSpawnEnemy();
     }
 
@@ -61,6 +55,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void StartSpawnEnemy()
     {
+        Debug.Log(_enemyQueue.Count);
         if (_enemyQueue.Count >= _enemyList.Count)
         {
             ReleaseEnemy();
@@ -78,10 +73,11 @@ public class EnemySpawner : MonoBehaviour
         {
             EnemyBehaviour enemy = Instantiate<EnemyBehaviour>(_enemyPrefabs, _returnPoint[i].position, Quaternion.identity);
             enemy.name = "Enemy" + (i + 1);
-            foreach (Transform waypoint in Waypoints)
+            foreach (Transform waypoint in _waypoints)
             {
                 enemy.AddWaypoint(waypoint);
             }
+            enemy.InitEnemy(_spawnPoint, _returnPoint[i], ReturnEnemy);
             _enemyList.Add(enemy);
             _enemyQueue.Enqueue(enemy);
         }
@@ -109,8 +105,7 @@ public class EnemySpawner : MonoBehaviour
     {
         EnemyBehaviour enemy = _enemyQueue.Dequeue();
         enemy.transform.position = _spawnPoint.position;
-        enemy.SetNavMeshStatus(true);
-        Debug.Log("Spawn");
+        enemy.NavMeshAgent.enabled = true;
         enemy.SwitchState(enemy.NeutralState);
         _isSpawning = false;
         SpawnEnemy();

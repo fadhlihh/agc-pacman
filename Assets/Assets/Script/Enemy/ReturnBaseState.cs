@@ -6,16 +6,21 @@ public class ReturnBaseState : IBehaviourState
 {
     public void OnEnterState(EnemyBehaviour enemyBehaviour)
     {
-        Debug.Log("Enter Return Base");
     }
 
     public void OnExitState(EnemyBehaviour enemyBehaviour)
     {
-        Debug.Log("Exit Return Base");
     }
 
     public void OnUpdateState(EnemyBehaviour enemyBehaviour)
     {
-        Debug.Log("Update Return Base");
+        if (Vector3.Distance(enemyBehaviour.SpawnPoint.position, enemyBehaviour.transform.position) > 1)
+        {
+            enemyBehaviour.NavMeshAgent.destination = enemyBehaviour.SpawnPoint.position;
+        }
+        else
+        {
+            enemyBehaviour.Return();
+        }
     }
 }

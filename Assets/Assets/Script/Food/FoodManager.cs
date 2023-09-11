@@ -7,6 +7,8 @@ public class FoodManager : MonoBehaviour
     private Player _player;
     [SerializeField]
     private GameManager _gameManager;
+    [SerializeField]
+    private ScoreManager _scoreManager;
 
     private List<FoodItem> _foodItemList = new List<FoodItem>();
 
@@ -27,6 +29,7 @@ public class FoodManager : MonoBehaviour
 
     private void OnConsumeFoodItem(FoodItem foodItem)
     {
+        _scoreManager.AddScore(100);
         if (foodItem.FoodType == FoodType.Big)
         {
             _player.ConsumePowerUp();

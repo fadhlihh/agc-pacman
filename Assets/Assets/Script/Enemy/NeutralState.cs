@@ -10,18 +10,15 @@ public class NeutralState : IBehaviourState
     private Vector3 _destination;
     public void OnEnterState(EnemyBehaviour enemyBehaviour)
     {
-        // Debug.Log("Enter Neutral");
         _destination = enemyBehaviour.transform.position;
     }
 
     public void OnExitState(EnemyBehaviour enemyBehaviour)
     {
-        // Debug.Log("Exit Neutral");
     }
 
     public void OnUpdateState(EnemyBehaviour enemyBehaviour)
     {
-        // Debug.Log("Update Neutral");
         if (enemyBehaviour.IsRetreating)
         {
             enemyBehaviour.SwitchState(enemyBehaviour.RetreatState);

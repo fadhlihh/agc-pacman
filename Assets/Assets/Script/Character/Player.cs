@@ -12,6 +12,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private EnemySpawner _enemySpawner;
     [SerializeField]
+    private GameManager _gameManager;
+    [SerializeField]
+    private ScoreManager _scoreManager;
+    [SerializeField]
     private float _speed;
     [SerializeField]
     private Transform _spawnPosition;
@@ -33,6 +37,7 @@ public class Player : MonoBehaviour
     public void Dead()
     {
         _characterController.enabled = false;
+        _gameManager.SubtractHealth();
         _enemySpawner.ReturnAllEnemy();
         Respawn();
     }
@@ -79,6 +84,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy") && _isPowerUpActive)
         {
+            _scoreManager.AddScore(100);
             other.gameObject.GetComponent<EnemyBehaviour>().ReturnToBase();
         }
     }

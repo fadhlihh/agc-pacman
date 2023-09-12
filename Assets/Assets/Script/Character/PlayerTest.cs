@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class PlayerTest : MonoBehaviour
 {
-
-    [SerializeField]
-    private InputController _inputController;
     [SerializeField]
     private float _speed;
 
@@ -17,11 +14,6 @@ public class PlayerTest : MonoBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
-    }
-
-    private void Start()
-    {
-        _inputController.OnMove += Move;
     }
 
     private void Move(Vector3 direction)

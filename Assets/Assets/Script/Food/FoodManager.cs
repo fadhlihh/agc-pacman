@@ -29,10 +29,10 @@ public class FoodManager : MonoBehaviour
 
     private void OnConsumeFoodItem(FoodItem foodItem)
     {
-        _scoreManager.AddScore(100);
+        _scoreManager?.AddScore(100);
         if (foodItem.FoodType == FoodType.Big)
         {
-            _player.ConsumePowerUp();
+            _player?.ConsumePowerUp();
         }
         _foodItemList.Remove(foodItem);
         if (_foodItemList.Count <= 0)

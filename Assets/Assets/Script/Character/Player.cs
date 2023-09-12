@@ -8,8 +8,6 @@ public class Player : MonoBehaviour
     public Action OnPowerUpGone;
 
     [SerializeField]
-    private InputController _inputController;
-    [SerializeField]
     private EnemySpawner _enemySpawner;
     [SerializeField]
     private GameManager _gameManager;
@@ -37,8 +35,8 @@ public class Player : MonoBehaviour
     public void Dead()
     {
         _characterController.enabled = false;
-        _gameManager.SubtractHealth();
-        _enemySpawner.ReturnAllEnemy();
+        _gameManager?.SubtractHealth();
+        _enemySpawner?.ReturnAllEnemy();
         Respawn();
     }
 
@@ -48,21 +46,26 @@ public class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    private void Start()
+    private void Update()
     {
-        _inputController.OnMove += Move;
+        Move();
     }
 
-    private void Move(Vector3 direction)
+    private void Move()
     {
-        if (direction.magnitude >= 0.1)
+        float horizontalAxis = Input.GetAxis("Horizontal");
+        float verticalAxis = Input.GetAxis("Vertical");
+
+        Vector3 axisDirection = new Vector3(horizontalAxis, 0, verticalAxis);
+
+        if (axisDirection.magnitude >= 0.1)
         {
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            float targetAngle = Mathf.Atan2(axisDirection.x, axisDirection.z) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
         }
 
-        _animator?.SetFloat("Speed", direction.magnitude);
-        _characterController?.Move(direction * _speed * Time.deltaTime);
+        _animator?.SetFloat("Speed", axisDirection.magnitude);
+        _characterController?.Move(axisDirection * _speed * Time.deltaTime);
     }
 
     private IEnumerator ActivatePowerUp()
@@ -84,7 +87,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy") && _isPowerUpActive)
         {
-            _scoreManager.AddScore(100);
+            _scoreManager?.AddScore(100);
             other.gameObject.GetComponent<EnemyBehaviour>().ReturnToBase();
         }
     }

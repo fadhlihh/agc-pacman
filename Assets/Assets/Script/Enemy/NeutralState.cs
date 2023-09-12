@@ -40,10 +40,14 @@ public class NeutralState : IBehaviourState
             }
         }
 
-        if (Vector3.Distance(enemyBehaviour.transform.position, enemyBehaviour.Player.transform.position) < enemyBehaviour.MaxPlayerDistance)
+        if (enemyBehaviour.Player != null)
         {
-            _isMoving = false;
-            enemyBehaviour.SwitchState(enemyBehaviour.ChaseState);
+            if (Vector3.Distance(enemyBehaviour.transform.position, enemyBehaviour.Player.transform.position) < enemyBehaviour.MaxPlayerDistance)
+            {
+                _isMoving = false;
+                enemyBehaviour.SwitchState(enemyBehaviour.ChaseState);
+            }
         }
+
     }
 }

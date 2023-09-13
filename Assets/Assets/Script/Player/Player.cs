@@ -19,7 +19,6 @@ public class Player : MonoBehaviour
     private Transform _spawnPosition;
 
     private CharacterController _characterController;
-    private Animator _animator;
     private Coroutine _powerUpCoroutine;
     private bool _isPowerUpActive;
 
@@ -43,7 +42,6 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        _animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -64,7 +62,6 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
         }
 
-        _animator?.SetFloat("Speed", axisDirection.magnitude);
         _characterController?.Move(axisDirection * _speed * Time.deltaTime);
     }
 

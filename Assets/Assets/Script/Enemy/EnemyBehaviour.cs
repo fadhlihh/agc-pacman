@@ -29,7 +29,6 @@ public class EnemyBehaviour : MonoBehaviour
     private RetreatState _retreatState = new RetreatState();
     private ReturnBaseState _returnBaseState = new ReturnBaseState();
     private IBehaviourState _currentState;
-    private Animator _animator;
     private Action<EnemyBehaviour> _onReturn;
 
     public WaitingState WaitingState { get { return _waitingState; } }
@@ -93,7 +92,6 @@ public class EnemyBehaviour : MonoBehaviour
     private void Awake()
     {
         NavMeshAgent = GetComponent<NavMeshAgent>();
-        _animator = GetComponent<Animator>();
         _currentState = _waitingState;
         _currentState.OnEnterState(this);
     }
@@ -112,7 +110,6 @@ public class EnemyBehaviour : MonoBehaviour
     {
         Debug.Log(gameObject.name + ": " + _currentState);
         _currentState.OnUpdateState(this);
-        _animator.SetFloat("Speed", NavMeshAgent.velocity.magnitude);
     }
 
     private void OnCollisionEnter(Collision other)
